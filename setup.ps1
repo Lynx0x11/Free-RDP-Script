@@ -16,5 +16,6 @@ Remove-Item $ChromeInstaller
 # Download and install Winget
 $WingetInstaller = $env:TEMP + '\winget.msixbundle'
 Invoke-WebRequest 'https://aka.ms/getwinget' -OutFile $WingetInstaller
+Start-Process -FilePath "powershell.exe" -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', "& { Add-AppxPackage -Path $WingetInstaller }" -Wait
 Start-Process -FilePath "winget.exe" -ArgumentList 'install', '-e', '--id', 'NirSoft.NirCmd' -Wait
 Remove-Item $WingetInstaller
