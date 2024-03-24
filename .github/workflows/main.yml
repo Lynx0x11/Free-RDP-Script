@@ -14,10 +14,6 @@ jobs:
   setup:
     runs-on: windows-latest
     steps:
-    - name: Install Winget
-  run: Invoke-WebRequest -Uri 'https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -OutFile 'winget.msixbundle'
-    msiexec /i winget.msixbundle /quiet /qn /norestart
-
     - uses: actions/checkout@v2
     - name: Initializing Setup
       run: ./setup.ps1
