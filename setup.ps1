@@ -3,7 +3,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
 # Download and install Chrome Remote Desktop
 $ChromeRemoteDesktopInstaller = $env:TEMP + '\chromeremotedesktophost.msi'
-Invoke-WebRequest 'https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi' -OutFile $ChromeRemoteDesktopInstaller
+Invoke-WebRequest 'https://dl.google.com/edgedl/chrome-remote-desktop/current/chromeremotedesktophost.msi' -OutFile $ChromeRemoteDesktopInstaller
 Start-Process $ChromeRemoteDesktopInstaller -Wait
 Remove-Item $ChromeRemoteDesktopInstaller
 
@@ -15,7 +15,7 @@ Remove-Item $ChromeInstaller
 
 # Download and install Winget
 $WingetInstaller = $env:TEMP + '\winget.msixbundle'
-Invoke-WebRequest 'https://aka.ms/getwinget' -OutFile $WingetInstaller
+Invoke-WebRequest 'https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -OutFile $WingetInstaller
 Add-AppxPackage -Path $WingetInstaller
 Start-Sleep -Seconds 10  # Wait for Winget installation to finish (optional delay)
 Remove-Item $WingetInstaller
