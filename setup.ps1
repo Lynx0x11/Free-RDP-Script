@@ -16,6 +16,9 @@ Remove-Item $ChromeInstaller
 # Download and install Winget
 $WingetInstaller = $env:TEMP + '\winget.msixbundle'
 Invoke-WebRequest 'https://aka.ms/getwinget' -OutFile $WingetInstaller
-Start-Process -FilePath "powershell.exe" -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', "& { Add-AppxPackage -Path $WingetInstaller }" -Wait
-Start-Process -FilePath "winget.exe" -ArgumentList 'install', '-e', '--id', 'NirSoft.NirCmd' -Wait
+Add-AppxPackage -Path $WingetInstaller
+Start-Sleep -Seconds 10  # Wait for Winget installation to finish (optional delay)
 Remove-Item $WingetInstaller
+
+# Install NirCmd using Winget
+Start-Process -FilePath "winget.exe" -ArgumentList 'install', '-e', '--id', 'NirSoft.NirCmd' -Wait
