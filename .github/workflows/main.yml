@@ -18,13 +18,16 @@ jobs:
       
     # Add your build and test steps here
     
-    - name: Display system information
+    - name: Install PowerShell
+      if: runner.os == 'Windows'
       run: |
-        echo "Operating System:"
-        ver
-        echo "Processor Architecture:"
-        echo %PROCESSOR_ARCHITECTURE%
-        echo "Environment Variables:"
-        set
+        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
+        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+        choco install powershell -y
         
-    # Add more steps as needed
+    - name: Get Public IP
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $publicIP = (Invoke-WebRequest -Uri 'https://api.ipify.org').Content
+        Write-Output "Public IP Address: $publicIP"
