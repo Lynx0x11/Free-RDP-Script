@@ -18,13 +18,38 @@ jobs:
       
     # Add your build and test steps here
     
+    - name: Display system information
+      run: |
+        echo "Operating System:"
+        ver
+        echo "Processor Architecture:"
+        echo %PROCESSOR_ARCHITECTURE%
+        echo "Environment Variables:"
+        set
+        
     - name: Install PowerShell
       if: runner.os == 'Windows'
       run: |
         Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
         choco install powershell -y
-    
+        
+    - name: Get Public IP
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $publicIP = (Invoke-WebRequest -Uri 'https://api.ipify.org').Content
+        Write-Output "Public IP Address: $publicIP"
+        
+    - name: Download and Install AnyDesk
+      if: runner.os == 'Windows'
+      run: |
+        $url = 'https://download.anydesk.com/AnyDesk.exe'
+        $downloadPath = 'C:\Temp\AnyDesk.exe'
+        Invoke-WebRequest -Uri $url -OutFile $downloadPath
+        Start-Process -FilePath $downloadPath -ArgumentList '/S' -Wait
+        Remove-Item $downloadPath
+        
     - name: Start AnyDesk
       if: runner.os == 'Windows'
       run: |
@@ -36,11 +61,3 @@ jobs:
         echo "Connect to this machine using AnyDesk with the following details:"
         echo "ID: YOUR_MACHINE_ID"
         echo "IP Address: $publicIP"
-        echo "Download AnyDesk: https://download.anydesk.com/AnyDesk.exe"
-        
-    - name: Get Public IP
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        $publicIP = (Invoke-WebRequest -Uri 'https://api.ipify.org').Content
-        Write-Output "Public IP Address: $publicIP"
