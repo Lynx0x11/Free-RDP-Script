@@ -17,6 +17,6 @@ jobs:
 
     - name: Connect to Server and Execute Command
       run: |
-        ssh -o StrictHostKeyChecking=no user@external_ip "your_command"
+        ssh -o StrictHostKeyChecking=no slayer@192.168.230.134 "ls -l /home/slayer"
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
