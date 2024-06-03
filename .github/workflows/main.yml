@@ -16,17 +16,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       
-    # Add your build and test steps here
-    
-    - name: Display system information
-      run: |
-        echo "Operating System:"
-        ver
-        echo "Processor Architecture:"
-        echo %PROCESSOR_ARCHITECTURE%
-        echo "Environment Variables:"
-        set
-        
     - name: Install PowerShell
       if: runner.os == 'Windows'
       run: |
