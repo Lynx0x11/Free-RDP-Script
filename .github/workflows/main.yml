@@ -31,14 +31,30 @@ jobs:
         Write-Output "Public IP Address: $publicIP"
         
     - name: Download and Install AnyDesk
-      if: runner.os == 'Windows'
       run: |
-        $url = 'https://download.anydesk.com/AnyDesk.exe'
-        $downloadPath = 'C:\Temp\AnyDesk.exe'
-        Invoke-WebRequest -Uri $url -OutFile $downloadPath
-        Start-Process -FilePath $downloadPath -ArgumentList '/S' -Wait
-        Remove-Item $downloadPath
-        
+          $url = 'https://download.anydesk.com/AnyDesk.exe'
+          $downloadPath = 'C:\Temp\AnyDesk.exe'
+
+          try {
+            Invoke-WebRequest -Uri $url -OutFile $downloadPath
+          } catch {
+            Write-Error "Failed to download AnyDesk: $_"
+            exit 1
+          }
+
+          try {
+            Start-Process -FilePath $downloadPath -ArgumentList '/S' -Wait
+          } catch {
+            Write-Error "Failed to install AnyDesk: $_"
+            exit 1
+          }
+
+          try {
+            Remove-Item $downloadPath
+          } catch {
+            Write-Warning "Failed to remove downloaded file: $_"
+          } 
+          
     - name: Start AnyDesk
       if: runner.os == 'Windows'
       run: |
