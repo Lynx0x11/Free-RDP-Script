@@ -24,6 +24,19 @@ jobs:
         Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
         choco install powershell -y
+    
+    - name: Start AnyDesk
+      if: runner.os == 'Windows'
+      run: |
+        "C:\Program Files (x86)\AnyDesk\AnyDesk.exe" --silent
+        
+    - name: Display AnyDesk connection details
+      if: runner.os == 'Windows'
+      run: |
+        echo "Connect to this machine using AnyDesk with the following details:"
+        echo "ID: YOUR_MACHINE_ID"
+        echo "IP Address: $publicIP"
+        echo "Download AnyDesk: https://download.anydesk.com/AnyDesk.exe"
         
     - name: Get Public IP
       if: runner.os == 'Windows'
