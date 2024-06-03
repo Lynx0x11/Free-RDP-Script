@@ -1,22 +1,30 @@
-name: SSH to External IP
+name: Local Windows Workflow
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  ssh-job:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    - name: Connect to Server and Execute Command
+      
+    # Add your build and test steps here
+    
+    - name: Display system information
       run: |
-        ssh -o StrictHostKeyChecking=no slayer@192.168.230.134 "ls -l /home/slayer"
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        echo "Operating System:"
+        ver
+        echo "Processor Architecture:"
+        echo %PROCESSOR_ARCHITECTURE%
+        echo "Environment Variables:"
+        set
+        
+    # Add more steps as needed
