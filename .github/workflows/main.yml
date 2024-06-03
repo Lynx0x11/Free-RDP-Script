@@ -1,34 +1,22 @@
-name: SSH
+name: SSH to External IP
 
 on: [push]
 
 jobs:
-  setup-self-hosted-ssh:
-    runs-on: self-hosted
+  ssh-job:
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Install SSH server
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y openssh-server
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Configure SSH server
+    - name: Connect to Server and Execute Command
       run: |
-        sudo systemctl enable ssh
-        sudo systemctl start ssh
-        sudo sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config
-        sudo systemctl restart ssh
-
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-
-    - name: Print SSH connection details
-      run: |
-        echo "SSH server is running on port 2222"
-        echo "To connect: ssh -p 2222 ${{ github.actor }}@$(hostname -I | awk '{print $1}')"
+        ssh -o StrictHostKeyChecking=no user@external_ip "your_command"
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
